@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 
 function Clients() {
+  const [busqueda, setBusqueda] = useState("");
   const [clientes, setClientes] = useState([]);
   const [formulario, setFormulario] = useState({
     nombre: "",
     email: "",
     proyecto: "",
+    estado: "Pendiente",
   });
 
   useEffect(() => {
@@ -76,11 +80,24 @@ function Clients() {
     }
   };
 
+  const clientesFiltrados = clientes.filter((cliente) =>
+    cliente.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+    cliente.email.toLowerCase().includes(busqueda.toLowerCase()) ||
+    cliente.proyecto.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
   return (
     <div>
       <h1>Clientes</h1>
 
       <form onSubmit={agregarCliente} className="form-card">
+        <input
+          type="text"
+          placeholder="Buscar cliente..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+
         <input
           type="text"
           name="nombre"
@@ -105,15 +122,32 @@ function Clients() {
           onChange={manejarCambio}
         />
 
+        <select
+          name="estado"
+          value={formulario.estado}
+          onChange={manejarCambio}
+        >
+          <option value="Pendiente">Pendiente</option>
+          <option value="En desarrollo">En desarrollo</option>
+          <option value="Finalizado">Finalizado</option>
+        </select>
+
         <button type="submit">Añadir cliente</button>
       </form>
 
       <div className="cards-grid">
-        {clientes.map((cliente) => (
+        {clientesFiltrados.map((cliente) => (
           <div className="client-card" key={cliente.id}>
             <h3>{cliente.nombre}</h3>
             <p>{cliente.email}</p>
             <span>{cliente.proyecto}</span>
+            <p>
+              Estado: <strong>{cliente.estado}</strong>
+            </p>
+
+            <Link to={`/clientes/${cliente.id}`} className="btn-link">
+              Ver detalle
+            </Link>
 
             <button onClick={() => eliminarCliente(cliente.id)}>
               Eliminar

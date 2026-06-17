@@ -2,123 +2,142 @@ import { useState, useEffect } from "react";
 import TaskCard from "../components/TaskCard";
 
 function Tasks() {
-    const [tareas, setTareas] = useState([]);
-    const [nuevaTarea, setNuevaTarea] = useState("");
+  const [tareas, setTareas] = useState([]);
+  const [clientes, setClientes] = useState([]);
+  const [nuevaTarea, setNuevaTarea] = useState("");
+  const [clienteId, setClienteId] = useState("");
 
-    useEffect(() => {
-        cargarTareas();
-    }, []);
+  useEffect(() => {
+    cargarDatos();
+  }, []);
 
-    const cargarTareas = async () => {
-        try {
-            const respuesta = await fetch("http://localhost:3000/tareas");
-            const datos = await respuesta.json();
-            setTareas(datos);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+  const cargarDatos = async () => {
+    try {
+      const respuestaTareas = await fetch("http://localhost:3000/tareas");
+      const datosTareas = await respuestaTareas.json();
 
-    const agregarTarea = async () => {
-        if (nuevaTarea.trim() === "") return;
+      const respuestaClientes = await fetch("http://localhost:3000/clientes");
+      const datosClientes = await respuestaClientes.json();
 
-        try {
-            const respuesta = await fetch("http://localhost:3000/tareas", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    texto: nuevaTarea,
-                }),
-            });
+      setTareas(datosTareas);
+      setClientes(datosClientes);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-            const tareaCreada = await respuesta.json();
+  const agregarTarea = async () => {
+    if (nuevaTarea.trim() === "" || clienteId === "") return;
 
-            setTareas([...tareas, tareaCreada]);
-            setNuevaTarea("");
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    try {
+      const respuesta = await fetch("http://localhost:3000/tareas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          texto: nuevaTarea,
+          clienteId: clienteId,
+        }),
+      });
 
-    const eliminarTarea = async (id) => {
-        try {
-            await fetch(`http://localhost:3000/tareas/${id}`, {
-                method: "DELETE",
-            });
+      const tareaCreada = await respuesta.json();
 
-            const nuevasTareas = tareas.filter((tarea) => tarea.id !== id);
-            setTareas(nuevasTareas);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+      setTareas([...tareas, tareaCreada]);
+      setNuevaTarea("");
+      setClienteId("");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const cambiarEstado = async (id) => {
-        const tarea = tareas.find(
-            (tarea) => tarea.id === id
-        );
+  const eliminarTarea = async (id) => {
+    try {
+      await fetch(`http://localhost:3000/tareas/${id}`, {
+        method: "DELETE",
+      });
 
-        const nuevoEstado = !tarea.completada;
+      setTareas(tareas.filter((tarea) => tarea.id !== id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-        try {
-            await fetch(
-                `http://localhost:3000/tareas/${id}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        completada: nuevoEstado,
-                    }),
-                }
-            );
+  const cambiarEstado = async (id) => {
+    const tarea = tareas.find((tarea) => tarea.id === id);
+    const nuevoEstado = !tarea.completada;
 
-            const tareasActualizadas = tareas.map(
-                (tarea) => {
-                    if (tarea.id === id) {
-                        return {
-                            ...tarea,
-                            completada: nuevoEstado,
-                        };
-                    }
+    try {
+      await fetch(`http://localhost:3000/tareas/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          completada: nuevoEstado,
+        }),
+      });
 
-                    return tarea;
-                }
-            );
+      setTareas(
+        tareas.map((tarea) =>
+          tarea.id === id
+            ? { ...tarea, completada: nuevoEstado }
+            : tarea
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-            setTareas(tareasActualizadas);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    return (
-        <div>
-            <h1>Mis tareas</h1>
+  const obtenerNombreCliente = (id) => {
+    const cliente = clientes.find((cliente) => cliente.id === id);
+    return cliente ? cliente.nombre : "Sin cliente";
+  };
 
-            <input
-                type="text"
-                placeholder="Nueva tarea"
-                value={nuevaTarea}
-                onChange={(e) => setNuevaTarea(e.target.value)}
-            />
+  return (
+    <div>
+      <h1>Mis tareas</h1>
 
-            <button onClick={agregarTarea}>Añadir tarea</button>
+      <div className="form-card">
+        <select
+          value={clienteId}
+          onChange={(e) => setClienteId(e.target.value)}
+        >
+          <option value="">Selecciona un cliente</option>
 
-            <hr />
+          {clientes.map((cliente) => (
+            <option key={cliente.id} value={cliente.id}>
+              {cliente.nombre}
+            </option>
+          ))}
+        </select>
 
-            {tareas.map((tarea) => (
-                <TaskCard
-                    key={tarea.id}
-                    tarea={tarea}
-                    eliminarTarea={eliminarTarea}
-                    cambiarEstado={cambiarEstado}
-                />
-            ))}
+        <input
+          type="text"
+          placeholder="Nueva tarea"
+          value={nuevaTarea}
+          onChange={(e) => setNuevaTarea(e.target.value)}
+        />
+
+        <button onClick={agregarTarea}>Añadir tarea</button>
+      </div>
+
+      <hr />
+
+      {tareas.map((tarea) => (
+        <div key={tarea.id}>
+          <small>Cliente: {obtenerNombreCliente(tarea.clienteId)}</small>
+
+          <TaskCard
+            tarea={tarea}
+            eliminarTarea={eliminarTarea}
+            cambiarEstado={cambiarEstado}
+          />
         </div>
-    );
+      ))}
+    </div>
+  );
 }
 
 export default Tasks;

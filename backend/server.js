@@ -50,6 +50,7 @@ app.post("/tareas", (req, res) => {
     id: Date.now(),
     texto: req.body.texto,
     completada: false,
+    clienteId: Number(req.body.clienteId),
   };
 
   tareas.push(nuevaTarea);
@@ -101,8 +102,9 @@ app.post("/clientes", (req, res) => {
     nombre: req.body.nombre,
     email: req.body.email,
     proyecto: req.body.proyecto,
+    estado: req.body.estado,
   };
-
+  
   clientes.push(nuevoCliente);
   guardarClientes(clientes);
 

@@ -2,7 +2,8 @@
   {
     "id": 1781712013366,
     "texto": "Crear Repositorio",
-    "completada": true
+    "completada": true,
+    "clienteId": 1
   },
   {
     "id": 1781712028469,
@@ -18,5 +19,17 @@
     "id": 1781712068966,
     "texto": "Agregar Sección Clientes",
     "completada": true
+  },
+  {
+    "id": 1781716061438,
+    "texto": "Cobrar Facturas Pendientes REMWI",
+    "completada": false,
+    "clienteId": null
+  },
+  {
+    "id": 1781716451577,
+    "texto": "Pasar Presupuesto",
+    "completada": false,
+    "clienteId": 1781711973807
   }
 ]
