@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { FaUsers, FaTasks, FaCheckCircle, FaClock } from "react-icons/fa";
 function Dashboard() {
   const [tareas, setTareas] = useState([]);
   const [clientes, setClientes] = useState([]);
@@ -36,22 +36,34 @@ function Dashboard() {
       <h1>Dashboard</h1>
 
       <div className="dashboard-grid">
-        <div className="stat-card">
+        <div className="stat-card stat-blue">
+          <div className="stat-icon">
+            <FaUsers />
+          </div>
           <span>Clientes</span>
           <strong>{totalClientes}</strong>
         </div>
 
-        <div className="stat-card">
+        <div className="stat-card stat-purple">
+          <div className="stat-icon">
+            <FaTasks />
+          </div>
           <span>Tareas</span>
           <strong>{totalTareas}</strong>
         </div>
 
-        <div className="stat-card">
+        <div className="stat-card stat-green">
+          <div className="stat-icon">
+            <FaCheckCircle />
+          </div>
           <span>Completadas</span>
           <strong>{tareasCompletadas}</strong>
         </div>
 
-        <div className="stat-card">
+        <div className="stat-card stat-orange">
+          <div className="stat-icon">
+            <FaClock />
+          </div>
           <span>Pendientes</span>
           <strong>{tareasPendientes}</strong>
         </div>

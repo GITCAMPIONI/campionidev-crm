@@ -31,5 +31,11 @@
     "texto": "Pasar Presupuesto",
     "completada": false,
     "clienteId": 1781711973807
+  },
+  {
+    "id": 1781725729821,
+    "texto": "Instalar WordPress en dominio de lorena",
+    "completada": false,
+    "clienteId": 1781725705247
   }
 ]

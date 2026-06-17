@@ -1,8 +1,14 @@
 function Header() {
   return (
     <header className="header">
-      <h2>CampioniDev Panel</h2>
-      <span>Gestión de tareas</span>
+      <div>
+        <h1>Panel de gestión</h1>
+        <p>Clientes, proyectos y tareas de CampioniDev</p>
+      </div>
+
+      <div className="header-badge">
+        Full Stack CRM
+      </div>
     </header>
   );
 }
