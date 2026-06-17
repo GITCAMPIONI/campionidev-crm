@@ -2,35 +2,57 @@ import { useEffect, useState } from "react";
 
 function Dashboard() {
   const [tareas, setTareas] = useState([]);
+  const [clientes, setClientes] = useState([]);
 
   useEffect(() => {
-    cargarTareas();
+    cargarDatos();
   }, []);
 
-  const cargarTareas = async () => {
+  const cargarDatos = async () => {
     try {
-      const respuesta = await fetch("http://localhost:3000/tareas");
-      const datos = await respuesta.json();
+      const respuestaTareas = await fetch("http://localhost:3000/tareas");
+      const datosTareas = await respuestaTareas.json();
 
-      setTareas(datos);
+      const respuestaClientes = await fetch("http://localhost:3000/clientes");
+      const datosClientes = await respuestaClientes.json();
+
+      setTareas(datosTareas);
+      setClientes(datosClientes);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const total = tareas.length;
-
+  const totalTareas = tareas.length;
   const completadas = tareas.filter((tarea) => tarea.completada).length;
-
-  const pendientes = total - completadas;
+  const pendientes = totalTareas - completadas;
+  const totalClientes = clientes.length;
 
   return (
     <div>
       <h1>Dashboard</h1>
 
-      <h3>Total tareas: {total}</h3>
-      <h3>Completadas: {completadas}</h3>
-      <h3>Pendientes: {pendientes}</h3>
+      <div className="dashboard-grid">
+        <div className="stat-card">
+          <span>Total tareas</span>
+          <strong>{totalTareas}</strong>
+        </div>
+
+        <div className="stat-card">
+          <span>Completadas</span>
+          <strong>{completadas}</strong>
+        </div>
+
+        <div className="stat-card">
+          <span>Pendientes</span>
+          <strong>{pendientes}</strong>
+        </div>
+
+        <div className="stat-card">
+          <span>Clientes</span>
+          <strong>{totalClientes}</strong>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,22 @@
 [
   {
-    "id": 1781710822715,
-    "texto": "APRENDER REACT",
+    "id": 1781712013366,
+    "texto": "Crear Repositorio",
+    "completada": true
+  },
+  {
+    "id": 1781712028469,
+    "texto": "Terminar CRM",
     "completada": false
+  },
+  {
+    "id": 1781712046565,
+    "texto": "Mejorar Interfaz Visual",
+    "completada": false
+  },
+  {
+    "id": 1781712068966,
+    "texto": "Agregar Sección Clientes",
+    "completada": true
   }
 ]

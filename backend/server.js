@@ -23,6 +23,21 @@ function guardarTareas(tareas) {
   fs.writeFileSync(tareasPath, JSON.stringify(tareas, null, 2));
 }
 
+const clientesPath = path.join(__dirname, "clientes.json");
+
+function leerClientes() {
+  if (!fs.existsSync(clientesPath)) {
+    fs.writeFileSync(clientesPath, "[]");
+  }
+
+  const data = fs.readFileSync(clientesPath, "utf-8");
+  return JSON.parse(data);
+}
+
+function guardarClientes(clientes) {
+  fs.writeFileSync(clientesPath, JSON.stringify(clientes, null, 2));
+}
+
 app.get("/tareas", (req, res) => {
   const tareas = leerTareas();
   res.json(tareas);
@@ -73,12 +88,42 @@ app.put("/tareas/:id", (req, res) => {
   res.json({ mensaje: "Tarea actualizada" });
 });
 
+app.get("/clientes", (req, res) => {
+  const clientes = leerClientes();
+  res.json(clientes);
+});
+
+app.post("/clientes", (req, res) => {
+  const clientes = leerClientes();
+
+  const nuevoCliente = {
+    id: Date.now(),
+    nombre: req.body.nombre,
+    email: req.body.email,
+    proyecto: req.body.proyecto,
+  };
+
+  clientes.push(nuevoCliente);
+  guardarClientes(clientes);
+
+  res.status(201).json(nuevoCliente);
+});
+
+app.delete("/clientes/:id", (req, res) => {
+  const clientes = leerClientes();
+  const id = Number(req.params.id);
+
+  const nuevosClientes = clientes.filter((cliente) => cliente.id !== id);
+
+  guardarClientes(nuevosClientes);
+
+  res.json({ mensaje: "Cliente eliminado" });
+});
+
 app.listen(3000, () => {
   console.log("Servidor iniciado en http://localhost:3000");
 });
-app.listen(3000, () => {
-  console.log("Servidor iniciado en http://localhost:3000");
-});
+
 app.put("/tareas/:id", (req, res) => {
   const tareas = leerTareas();
   const id = Number(req.params.id);

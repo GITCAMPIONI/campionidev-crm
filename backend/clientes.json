@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "nombre": "Cliente Demo",
+    "email": "cliente@demo.com",
+    "proyecto": "Web corporativa"
+  },
+  {
+    "id": 1781711973807,
+    "nombre": "Maxi Cantou",
+    "email": "maxi@cantou.com",
+    "proyecto": "Ciberseguridad"
+  }
+]

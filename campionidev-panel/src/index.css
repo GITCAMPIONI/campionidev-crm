@@ -181,3 +181,79 @@ body {
 .content {
   padding: 30px;
 }
+
+.form-card {
+  display: grid;
+  gap: 12px;
+  max-width: 520px;
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+input {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  background: #2563eb;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 18px;
+}
+
+.client-card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.client-card h3 {
+  margin-top: 0;
+}
+
+.client-card p {
+  color: #6b7280;
+}
+
+.client-card span {
+  display: inline-block;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card span {
+  display: block;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.stat-card strong {
+  font-size: 32px;
+}
