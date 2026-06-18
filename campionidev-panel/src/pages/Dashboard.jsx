@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
-import { FaUsers, FaTasks, FaCheckCircle, FaClock } from "react-icons/fa";
+import {
+  FaUsers,
+  FaTasks,
+  FaCheckCircle,
+  FaClock,
+  FaFolderOpen,
+} from "react-icons/fa";
+
 function Dashboard() {
   const [tareas, setTareas] = useState([]);
   const [clientes, setClientes] = useState([]);
+  const [proyectos, setProyectos] = useState([]);
 
   useEffect(() => {
     cargarDatos();
@@ -16,8 +24,12 @@ function Dashboard() {
       const resClientes = await fetch("http://localhost:3000/clientes");
       const dataClientes = await resClientes.json();
 
+      const resProyectos = await fetch("http://localhost:3000/proyectos");
+      const dataProyectos = await resProyectos.json();
+
       setTareas(dataTareas);
       setClientes(dataClientes);
+      setProyectos(dataProyectos);
     } catch (error) {
       console.error(error);
     }
@@ -27,6 +39,7 @@ function Dashboard() {
   const tareasCompletadas = tareas.filter((tarea) => tarea.completada).length;
   const tareasPendientes = totalTareas - tareasCompletadas;
   const totalClientes = clientes.length;
+  const totalProyectos = proyectos.length;
 
   const ultimosClientes = clientes.slice(-3).reverse();
   const ultimasTareas = tareas.slice(-3).reverse();
@@ -42,6 +55,14 @@ function Dashboard() {
           </div>
           <span>Clientes</span>
           <strong>{totalClientes}</strong>
+        </div>
+
+        <div className="stat-card stat-purple">
+          <div className="stat-icon">
+            <FaFolderOpen />
+          </div>
+          <span>Proyectos</span>
+          <strong>{totalProyectos}</strong>
         </div>
 
         <div className="stat-card stat-purple">

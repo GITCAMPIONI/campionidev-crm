@@ -7,6 +7,8 @@ function Tasks() {
   const [editandoId, setEditandoId] = useState(null);
   const [nuevaTarea, setNuevaTarea] = useState("");
   const [clienteId, setClienteId] = useState("");
+  const [proyectos, setProyectos] = useState([]);
+  const [proyectoId, setProyectoId] = useState("");
 
   useEffect(() => {
     cargarDatos();
@@ -20,6 +22,10 @@ function Tasks() {
       const respuestaClientes = await fetch("http://localhost:3000/clientes");
       const datosClientes = await respuestaClientes.json();
 
+      const respuestaProyectos = await fetch("http://localhost:3000/proyectos");
+      const datosProyectos = await respuestaProyectos.json();
+      setProyectos(datosProyectos);
+
       setTareas(datosTareas);
       setClientes(datosClientes);
     } catch (error) {
@@ -28,7 +34,7 @@ function Tasks() {
   };
 
   const agregarTarea = async () => {
-    if (nuevaTarea.trim() === "" || clienteId === "") return;
+    if (nuevaTarea.trim() === "" || clienteId === "" || proyectoId === "") return;
 
     try {
       if (editandoId) {
@@ -42,12 +48,12 @@ function Tasks() {
           body: JSON.stringify({
             texto: nuevaTarea,
             clienteId: Number(clienteId),
+            proyectoId: Number(proyectoId),
             completada: tareaOriginal.completada,
           }),
         });
 
         await cargarDatos();
-
         setEditandoId(null);
       } else {
         const respuesta = await fetch("http://localhost:3000/tareas", {
@@ -57,17 +63,18 @@ function Tasks() {
           },
           body: JSON.stringify({
             texto: nuevaTarea,
-            clienteId: clienteId,
+            clienteId: Number(clienteId),
+            proyectoId: Number(proyectoId),
           }),
         });
 
         const tareaCreada = await respuesta.json();
-
         setTareas([...tareas, tareaCreada]);
       }
 
       setNuevaTarea("");
       setClienteId("");
+      setProyectoId("");
     } catch (error) {
       console.error(error);
     }
@@ -97,7 +104,8 @@ function Tasks() {
         },
         body: JSON.stringify({
           texto: tarea.texto,
-          clienteId: tarea.clienteId,
+          clienteId: Number(tarea.clienteId),
+          proyectoId: Number(tarea.proyectoId),
           completada: nuevoEstado,
         }),
       });
@@ -124,13 +132,29 @@ function Tasks() {
       <div className="form-card">
         <select
           value={clienteId}
-          onChange={(e) => setClienteId(e.target.value)}
+          onChange={(e) => {
+            setClienteId(e.target.value);
+            setProyectoId("");
+          }}
         >
           <option value="">Selecciona un cliente</option>
 
           {clientes.map((cliente) => (
             <option key={cliente.id} value={cliente.id}>
               {cliente.nombre}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={proyectoId}
+          onChange={(e) => setProyectoId(e.target.value)}
+        >
+          <option value="">Selecciona un proyecto</option>
+
+          {proyectos.map((proyecto) => (
+            <option key={proyecto.id} value={proyecto.id}>
+              {proyecto.nombre} - Cliente ID: {proyecto.clienteId}
             </option>
           ))}
         </select>
@@ -164,6 +188,7 @@ function Tasks() {
               setEditandoId(tarea.id);
               setNuevaTarea(tarea.texto);
               setClienteId(String(tarea.clienteId));
+              setProyectoId(String(tarea.proyectoId));
             }}
           >
             Editar

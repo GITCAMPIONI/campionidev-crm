@@ -1,43 +1,9 @@
 [
   {
-    "id": 1781712013366,
-    "texto": "Crear Repositorio",
-    "completada": true,
-    "clienteId": 1
-  },
-  {
-    "id": 1781712028469,
-    "texto": "Terminar CRM",
+    "id": 1781800648216,
+    "texto": "Levantrar React y crear estructura de proyecto.",
     "completada": false,
-    "clienteId": 0
-  },
-  {
-    "id": 1781712046565,
-    "texto": "Mejorar Interfaz Visual",
-    "completada": false,
-    "clienteId": 1781711973807
-  },
-  {
-    "id": 1781712068966,
-    "texto": "Agregar Sección Clientes",
-    "completada": true
-  },
-  {
-    "id": 1781716061438,
-    "texto": "Cobrar Facturas Pendientes REMWI",
-    "completada": false,
-    "clienteId": null
-  },
-  {
-    "id": 1781716451577,
-    "texto": "Pasar Presupuesto",
-    "completada": false,
-    "clienteId": 1781711973807
-  },
-  {
-    "id": 1781725729821,
-    "texto": "Instalar WordPress en dominio de lorena",
-    "completada": false,
-    "clienteId": 1781725705247
+    "clienteId": 1781711973807,
+    "proyectoId": 1781800604169
   }
 ]

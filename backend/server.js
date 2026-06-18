@@ -66,6 +66,7 @@ app.post("/tareas", (req, res) => {
     texto: req.body.texto,
     completada: false,
     clienteId: Number(req.body.clienteId),
+    proyectoId: Number(req.body.proyectoId),
   };
 
   tareas.push(nuevaTarea);
@@ -73,6 +74,7 @@ app.post("/tareas", (req, res) => {
 
   res.status(201).json(nuevaTarea);
 });
+
 app.delete("/tareas/:id", (req, res) => {
   const tareas = leerTareas();
   const id = Number(req.params.id);
@@ -84,26 +86,27 @@ app.delete("/tareas/:id", (req, res) => {
   res.json({ mensaje: "Tarea eliminada" });
 });
 
-app.put("/tareas/:id", (req, res) => {
-  const tareas = leerTareas();
+app.put("/clientes/:id", (req, res) => {
+  const clientes = leerClientes();
   const id = Number(req.params.id);
 
-  const tareasActualizadas = tareas.map((tarea) => {
-    if (tarea.id === id) {
+  const clientesActualizados = clientes.map((cliente) => {
+    if (cliente.id === id) {
       return {
-        ...tarea,
-        texto: req.body.texto,
-        clienteId: Number(req.body.clienteId),
-        completada: req.body.completada,
+        ...cliente,
+        nombre: req.body.nombre,
+        email: req.body.email,
+        proyecto: req.body.proyecto,
+        estado: req.body.estado,
       };
     }
 
-    return tarea;
+    return cliente;
   });
 
-  guardarTareas(tareasActualizadas);
+  guardarClientes(clientesActualizados);
 
-  res.json({ mensaje: "Tarea actualizada" });
+  res.json({ mensaje: "Cliente actualizado" });
 });
 
 app.get("/clientes", (req, res) => {
