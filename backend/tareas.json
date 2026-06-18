@@ -8,12 +8,14 @@
   {
     "id": 1781712028469,
     "texto": "Terminar CRM",
-    "completada": false
+    "completada": false,
+    "clienteId": 0
   },
   {
     "id": 1781712046565,
     "texto": "Mejorar Interfaz Visual",
-    "completada": false
+    "completada": false,
+    "clienteId": 1781711973807
   },
   {
     "id": 1781712068966,

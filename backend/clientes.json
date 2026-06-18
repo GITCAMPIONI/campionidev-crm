@@ -7,14 +7,22 @@
   },
   {
     "id": 1781711973807,
-    "nombre": "Maxi Cantou",
+    "nombre": "Maxi Cantouuu",
     "email": "maxi@cantou.com",
-    "proyecto": "Ciberseguridad"
+    "proyecto": "Ciberseguridad",
+    "estado": "En desarrollo"
   },
   {
     "id": 1781725705247,
     "nombre": "Lorena Veloza",
     "email": "lorena@veloza.com",
     "proyecto": "Pagina web corporativa"
+  },
+  {
+    "id": 1781791870448,
+    "nombre": "Ian David",
+    "email": "tavera@gmail.com",
+    "proyecto": "Sitio web",
+    "estado": "Pendiente"
   }
 ]

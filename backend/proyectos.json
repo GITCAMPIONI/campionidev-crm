@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "clienteId": 1,
+    "nombre": "Web corporativa",
+    "estado": "En desarrollo",
+    "fechaInicio": "2026-06-18"
+  }
+]

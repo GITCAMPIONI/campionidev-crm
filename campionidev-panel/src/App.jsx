@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import Clients from "./pages/Clients";
 import ClientDetail from "./pages/ClientDetail";
+import Projects from "./pages/Projects";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/tareas" element={<Tasks />} />
           <Route path="/clientes" element={<Clients />} />
           <Route path="/clientes/:id" element={<ClientDetail />} />
+          <Route path="/proyectos" element={<Projects />} />
         </Routes>
       </Layout>
     </BrowserRouter>

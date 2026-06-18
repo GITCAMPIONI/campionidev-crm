@@ -2,21 +2,16 @@ import { NavLink } from "react-router-dom";
 import { FaUsers, FaTasks } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import logo from "../assets/campionidev_icon.png";
+import { FaFolderOpen } from "react-icons/fa";
 
 function Sidebar() {
   return (
     <aside className="sidebar">
-      <div className="brand">
-        <img
-          src={logo}
-          alt="CampioniDev"
-          className="brand-logo"
-        />
+      <div className="brand brand-vertical">
+        <img src={logo} alt="CampioniDev" className="brand-logo-large" />
 
-        <div>
-          <h2>CampioniDev</h2>
-          <p>CRM Panel</p>
-        </div>
+        <h2>CampioniDev</h2>
+        <p>CRM PANEL</p>
       </div>
 
       <nav className="sidebar-nav">
@@ -34,12 +29,12 @@ function Sidebar() {
           <FaTasks />
           Tareas
         </NavLink>
-      </nav>
 
-      <div className="sidebar-footer">
-        <small>Versión 0.1</small>
-        <small>React + Node.js</small>
-      </div>
+        <NavLink to="/proyectos">
+          <FaFolderOpen />
+          Proyectos
+        </NavLink>
+      </nav>
     </aside>
   );
 }

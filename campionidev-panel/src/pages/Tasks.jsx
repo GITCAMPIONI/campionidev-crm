@@ -4,6 +4,7 @@ import TaskCard from "../components/TaskCard";
 function Tasks() {
   const [tareas, setTareas] = useState([]);
   const [clientes, setClientes] = useState([]);
+  const [editandoId, setEditandoId] = useState(null);
   const [nuevaTarea, setNuevaTarea] = useState("");
   const [clienteId, setClienteId] = useState("");
 
@@ -30,20 +31,41 @@ function Tasks() {
     if (nuevaTarea.trim() === "" || clienteId === "") return;
 
     try {
-      const respuesta = await fetch("http://localhost:3000/tareas", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          texto: nuevaTarea,
-          clienteId: clienteId,
-        }),
-      });
+      if (editandoId) {
+        const tareaOriginal = tareas.find((tarea) => tarea.id === editandoId);
 
-      const tareaCreada = await respuesta.json();
+        await fetch(`http://localhost:3000/tareas/${editandoId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            texto: nuevaTarea,
+            clienteId: Number(clienteId),
+            completada: tareaOriginal.completada,
+          }),
+        });
 
-      setTareas([...tareas, tareaCreada]);
+        await cargarDatos();
+
+        setEditandoId(null);
+      } else {
+        const respuesta = await fetch("http://localhost:3000/tareas", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            texto: nuevaTarea,
+            clienteId: clienteId,
+          }),
+        });
+
+        const tareaCreada = await respuesta.json();
+
+        setTareas([...tareas, tareaCreada]);
+      }
+
       setNuevaTarea("");
       setClienteId("");
     } catch (error) {
@@ -74,15 +96,15 @@ function Tasks() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          texto: tarea.texto,
+          clienteId: tarea.clienteId,
           completada: nuevoEstado,
         }),
       });
 
       setTareas(
         tareas.map((tarea) =>
-          tarea.id === id
-            ? { ...tarea, completada: nuevoEstado }
-            : tarea
+          tarea.id === id ? { ...tarea, completada: nuevoEstado } : tarea
         )
       );
     } catch (error) {
@@ -120,7 +142,9 @@ function Tasks() {
           onChange={(e) => setNuevaTarea(e.target.value)}
         />
 
-        <button onClick={agregarTarea}>Añadir tarea</button>
+        <button onClick={agregarTarea}>
+          {editandoId ? "Guardar cambios" : "Añadir tarea"}
+        </button>
       </div>
 
       <hr />
@@ -134,6 +158,16 @@ function Tasks() {
             eliminarTarea={eliminarTarea}
             cambiarEstado={cambiarEstado}
           />
+          <button
+            type="button"
+            onClick={() => {
+              setEditandoId(tarea.id);
+              setNuevaTarea(tarea.texto);
+              setClienteId(String(tarea.clienteId));
+            }}
+          >
+            Editar
+          </button>
         </div>
       ))}
     </div>

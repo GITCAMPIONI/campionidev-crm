@@ -38,6 +38,21 @@ function guardarClientes(clientes) {
   fs.writeFileSync(clientesPath, JSON.stringify(clientes, null, 2));
 }
 
+const proyectosPath = path.join(__dirname, "proyectos.json");
+
+function leerProyectos() {
+  if (!fs.existsSync(proyectosPath)) {
+    fs.writeFileSync(proyectosPath, "[]");
+  }
+
+  const data = fs.readFileSync(proyectosPath, "utf-8");
+  return JSON.parse(data);
+}
+
+function guardarProyectos(proyectos) {
+  fs.writeFileSync(proyectosPath, JSON.stringify(proyectos, null, 2));
+}
+
 app.get("/tareas", (req, res) => {
   const tareas = leerTareas();
   res.json(tareas);
@@ -77,6 +92,8 @@ app.put("/tareas/:id", (req, res) => {
     if (tarea.id === id) {
       return {
         ...tarea,
+        texto: req.body.texto,
+        clienteId: Number(req.body.clienteId),
         completada: req.body.completada,
       };
     }
@@ -104,7 +121,7 @@ app.post("/clientes", (req, res) => {
     proyecto: req.body.proyecto,
     estado: req.body.estado,
   };
-  
+
   clientes.push(nuevoCliente);
   guardarClientes(clientes);
 
@@ -122,28 +139,80 @@ app.delete("/clientes/:id", (req, res) => {
   res.json({ mensaje: "Cliente eliminado" });
 });
 
+
+
+app.put("/clientes/:id", (req, res) => {
+  const clientes = leerClientes();
+  const id = Number(req.params.id);
+
+  const clientesActualizados = clientes.map((cliente) => {
+    if (cliente.id === id) {
+      return {
+        ...cliente,
+        nombre: req.body.nombre,
+        email: req.body.email,
+        proyecto: req.body.proyecto,
+        estado: req.body.estado,
+      };
+    }
+
+    return cliente;
+  });
+
+  guardarClientes(clientesActualizados);
+
+  const proyectosPath = path.join(__dirname, "proyectos.json");
+
+  function leerProyectos() {
+    if (!fs.existsSync(proyectosPath)) {
+      fs.writeFileSync(proyectosPath, "[]");
+    }
+
+    const data = fs.readFileSync(proyectosPath, "utf-8");
+    return JSON.parse(data);
+  }
+
+  function guardarProyectos(proyectos) {
+    fs.writeFileSync(proyectosPath, JSON.stringify(proyectos, null, 2));
+  }
+
+  res.json({ mensaje: "Cliente actualizado" });
+});
+
+app.get("/proyectos", (req, res) => {
+  const proyectos = leerProyectos();
+  res.json(proyectos);
+});
+
+app.post("/proyectos", (req, res) => {
+  const proyectos = leerProyectos();
+
+  const nuevoProyecto = {
+    id: Date.now(),
+    clienteId: Number(req.body.clienteId),
+    nombre: req.body.nombre,
+    estado: req.body.estado,
+    fechaInicio: req.body.fechaInicio,
+  };
+
+  proyectos.push(nuevoProyecto);
+  guardarProyectos(proyectos);
+
+  res.status(201).json(nuevoProyecto);
+});
+
+app.delete("/proyectos/:id", (req, res) => {
+  const proyectos = leerProyectos();
+  const id = Number(req.params.id);
+
+  const nuevosProyectos = proyectos.filter((proyecto) => proyecto.id !== id);
+
+  guardarProyectos(nuevosProyectos);
+
+  res.json({ mensaje: "Proyecto eliminado" });
+});
+
 app.listen(3000, () => {
   console.log("Servidor iniciado en http://localhost:3000");
 });
 
-app.put("/tareas/:id", (req, res) => {
-  const tareas = leerTareas();
-  const id = Number(req.params.id);
-
-  const tareasActualizadas = tareas.map((tarea) => {
-    if (tarea.id === id) {
-      return {
-        ...tarea,
-        completada: req.body.completada,
-      };
-    }
-
-    return tarea;
-  });
-
-  guardarTareas(tareasActualizadas);
-
-  res.json({
-    mensaje: "Tarea actualizada",
-  });
-});

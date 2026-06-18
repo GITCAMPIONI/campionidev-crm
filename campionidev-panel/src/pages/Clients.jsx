@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-
 function Clients() {
   const [busqueda, setBusqueda] = useState("");
   const [clientes, setClientes] = useState([]);
+  const [editandoId, setEditandoId] = useState(null);
+
   const [formulario, setFormulario] = useState({
     nombre: "",
     email: "",
@@ -45,26 +46,49 @@ function Clients() {
     }
 
     try {
-      const respuesta = await fetch("http://localhost:3000/clientes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formulario),
-      });
+      if (editandoId) {
+        await fetch(`http://localhost:3000/clientes/${editandoId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formulario),
+        });
 
-      const clienteCreado = await respuesta.json();
+        await cargarClientes();
+        setEditandoId(null);
+      } else {
+        const respuesta = await fetch("http://localhost:3000/clientes", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formulario),
+        });
 
-      setClientes([...clientes, clienteCreado]);
+        const clienteCreado = await respuesta.json();
+        setClientes([...clientes, clienteCreado]);
+      }
 
       setFormulario({
         nombre: "",
         email: "",
         proyecto: "",
+        estado: "Pendiente",
       });
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const cancelarEdicion = () => {
+    setEditandoId(null);
+    setFormulario({
+      nombre: "",
+      email: "",
+      proyecto: "",
+      estado: "Pendiente",
+    });
   };
 
   const eliminarCliente = async (id) => {
@@ -80,10 +104,11 @@ function Clients() {
     }
   };
 
-  const clientesFiltrados = clientes.filter((cliente) =>
-    cliente.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-    cliente.email.toLowerCase().includes(busqueda.toLowerCase()) ||
-    cliente.proyecto.toLowerCase().includes(busqueda.toLowerCase())
+  const clientesFiltrados = clientes.filter(
+    (cliente) =>
+      cliente.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+      cliente.email.toLowerCase().includes(busqueda.toLowerCase()) ||
+      cliente.proyecto.toLowerCase().includes(busqueda.toLowerCase())
   );
 
   return (
@@ -91,13 +116,6 @@ function Clients() {
       <h1>Clientes</h1>
 
       <form onSubmit={agregarCliente} className="form-card">
-        <input
-          type="text"
-          placeholder="Buscar cliente..."
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
-        />
-
         <input
           type="text"
           name="nombre"
@@ -132,26 +150,68 @@ function Clients() {
           <option value="Finalizado">Finalizado</option>
         </select>
 
-        <button type="submit">Añadir cliente</button>
+        <button type="submit">
+          {editandoId ? "Guardar cambios" : "Añadir cliente"}
+        </button>
+
+        {editandoId && (
+          <button type="button" onClick={cancelarEdicion}>
+            Cancelar edición
+          </button>
+        )}
       </form>
+
+      <input
+        type="text"
+        placeholder="Buscar cliente..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+        style={{ marginBottom: "20px" }}
+      />
 
       <div className="cards-grid">
         {clientesFiltrados.map((cliente) => (
           <div className="client-card" key={cliente.id}>
-            <h3>{cliente.nombre}</h3>
+            <div className="client-card-header">
+              <h3>{cliente.nombre}</h3>
+
+              <span
+                className={`status-badge ${(cliente.estado || "Pendiente")
+                  .replace(" ", "-")
+                  .toLowerCase()}`}
+              >
+                {cliente.estado || "Pendiente"}
+              </span>
+            </div>
+
             <p>{cliente.email}</p>
-            <span>{cliente.proyecto}</span>
-            <p>
-              Estado: <strong>{cliente.estado}</strong>
-            </p>
 
-            <Link to={`/clientes/${cliente.id}`} className="btn-link">
-              Ver detalle
-            </Link>
+            <div className="client-project">{cliente.proyecto}</div>
 
-            <button onClick={() => eliminarCliente(cliente.id)}>
-              Eliminar
-            </button>
+            <div className="client-actions">
+              <Link to={`/clientes/${cliente.id}`} className="btn-link">
+                Ver detalle
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setEditandoId(cliente.id);
+                  setFormulario({
+                    nombre: cliente.nombre,
+                    email: cliente.email,
+                    proyecto: cliente.proyecto,
+                    estado: cliente.estado || "Pendiente",
+                  });
+                }}
+              >
+                Editar
+              </button>
+
+              <button onClick={() => eliminarCliente(cliente.id)}>
+                Eliminar
+              </button>
+            </div>
           </div>
         ))}
       </div>
