@@ -6,6 +6,7 @@ import {
   FaClock,
   FaFolderOpen,
 } from "react-icons/fa";
+import { apiUrl } from "../api";
 
 function Dashboard() {
   const [tareas, setTareas] = useState([]);
@@ -18,13 +19,13 @@ function Dashboard() {
 
   const cargarDatos = async () => {
     try {
-      const resTareas = await fetch("http://localhost:3000/tareas");
+      const resTareas = await fetch(apiUrl("/tareas"));
       const dataTareas = await resTareas.json();
 
-      const resClientes = await fetch("http://localhost:3000/clientes");
+      const resClientes = await fetch(apiUrl("/clientes"));
       const dataClientes = await resClientes.json();
 
-      const resProyectos = await fetch("http://localhost:3000/proyectos");
+      const resProyectos = await fetch(apiUrl("/proyectos"));
       const dataProyectos = await resProyectos.json();
 
       setTareas(dataTareas);

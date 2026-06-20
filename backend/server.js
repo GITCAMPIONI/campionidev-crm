@@ -86,27 +86,32 @@ app.delete("/tareas/:id", (req, res) => {
   res.json({ mensaje: "Tarea eliminada" });
 });
 
-app.put("/clientes/:id", (req, res) => {
-  const clientes = leerClientes();
+app.put("/tareas/:id", (req, res) => {
+  const tareas = leerTareas();
   const id = Number(req.params.id);
+  const tarea = tareas.find((tarea) => tarea.id === id);
 
-  const clientesActualizados = clientes.map((cliente) => {
-    if (cliente.id === id) {
+  if (!tarea) {
+    return res.status(404).json({ mensaje: "Tarea no encontrada" });
+  }
+
+  const tareasActualizadas = tareas.map((tarea) => {
+    if (tarea.id === id) {
       return {
-        ...cliente,
-        nombre: req.body.nombre,
-        email: req.body.email,
-        proyecto: req.body.proyecto,
-        estado: req.body.estado,
+        ...tarea,
+        texto: req.body.texto,
+        completada: Boolean(req.body.completada),
+        clienteId: Number(req.body.clienteId),
+        proyectoId: Number(req.body.proyectoId),
       };
     }
 
-    return cliente;
+    return tarea;
   });
 
-  guardarClientes(clientesActualizados);
+  guardarTareas(tareasActualizadas);
 
-  res.json({ mensaje: "Cliente actualizado" });
+  res.json(tareasActualizadas.find((tarea) => tarea.id === id));
 });
 
 app.get("/clientes", (req, res) => {
@@ -142,11 +147,14 @@ app.delete("/clientes/:id", (req, res) => {
   res.json({ mensaje: "Cliente eliminado" });
 });
 
-
-
 app.put("/clientes/:id", (req, res) => {
   const clientes = leerClientes();
   const id = Number(req.params.id);
+  const cliente = clientes.find((cliente) => cliente.id === id);
+
+  if (!cliente) {
+    return res.status(404).json({ mensaje: "Cliente no encontrado" });
+  }
 
   const clientesActualizados = clientes.map((cliente) => {
     if (cliente.id === id) {
@@ -163,21 +171,6 @@ app.put("/clientes/:id", (req, res) => {
   });
 
   guardarClientes(clientesActualizados);
-
-  const proyectosPath = path.join(__dirname, "proyectos.json");
-
-  function leerProyectos() {
-    if (!fs.existsSync(proyectosPath)) {
-      fs.writeFileSync(proyectosPath, "[]");
-    }
-
-    const data = fs.readFileSync(proyectosPath, "utf-8");
-    return JSON.parse(data);
-  }
-
-  function guardarProyectos(proyectos) {
-    fs.writeFileSync(proyectosPath, JSON.stringify(proyectos, null, 2));
-  }
 
   res.json({ mensaje: "Cliente actualizado" });
 });

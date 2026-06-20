@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { apiUrl } from "../api";
 
 function ClientDetail() {
   const { id } = useParams();
@@ -13,7 +14,7 @@ function ClientDetail() {
 
   const cargarDatos = async () => {
     try {
-      const respuestaClientes = await fetch("http://localhost:3000/clientes");
+      const respuestaClientes = await fetch(apiUrl("/clientes"));
       const clientes = await respuestaClientes.json();
 
       const clienteEncontrado = clientes.find(
@@ -22,7 +23,7 @@ function ClientDetail() {
 
       setCliente(clienteEncontrado);
 
-      const respuestaTareas = await fetch("http://localhost:3000/tareas");
+      const respuestaTareas = await fetch(apiUrl("/tareas"));
       const tareasData = await respuestaTareas.json();
 
       const tareasDelCliente = tareasData.filter(

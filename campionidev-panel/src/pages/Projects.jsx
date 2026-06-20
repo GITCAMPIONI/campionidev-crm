@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiUrl } from "../api";
 
 function Projects() {
     const [proyectos, setProyectos] = useState([]);
@@ -17,10 +18,10 @@ function Projects() {
 
     const cargarDatos = async () => {
         try {
-            const resProyectos = await fetch("http://localhost:3000/proyectos");
+            const resProyectos = await fetch(apiUrl("/proyectos"));
             const dataProyectos = await resProyectos.json();
 
-            const resClientes = await fetch("http://localhost:3000/clientes");
+            const resClientes = await fetch(apiUrl("/clientes"));
             const dataClientes = await resClientes.json();
 
             setProyectos(dataProyectos);
@@ -41,7 +42,7 @@ function Projects() {
         e.preventDefault();
 
         try {
-            const respuesta = await fetch("http://localhost:3000/proyectos", {
+            const respuesta = await fetch(apiUrl("/proyectos"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -66,7 +67,7 @@ function Projects() {
 
     const eliminarProyecto = async (id) => {
         try {
-            await fetch(`http://localhost:3000/proyectos/${id}`, {
+            await fetch(apiUrl(`/proyectos/${id}`), {
                 method: "DELETE",
             });
 

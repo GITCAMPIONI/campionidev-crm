@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { apiUrl } from "../api";
 
 function Clients() {
   const [busqueda, setBusqueda] = useState("");
@@ -19,7 +20,7 @@ function Clients() {
 
   const cargarClientes = async () => {
     try {
-      const respuesta = await fetch("http://localhost:3000/clientes");
+      const respuesta = await fetch(apiUrl("/clientes"));
       const datos = await respuesta.json();
       setClientes(datos);
     } catch (error) {
@@ -47,7 +48,7 @@ function Clients() {
 
     try {
       if (editandoId) {
-        await fetch(`http://localhost:3000/clientes/${editandoId}`, {
+        await fetch(apiUrl(`/clientes/${editandoId}`), {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -58,7 +59,7 @@ function Clients() {
         await cargarClientes();
         setEditandoId(null);
       } else {
-        const respuesta = await fetch("http://localhost:3000/clientes", {
+        const respuesta = await fetch(apiUrl("/clientes"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -93,7 +94,7 @@ function Clients() {
 
   const eliminarCliente = async (id) => {
     try {
-      await fetch(`http://localhost:3000/clientes/${id}`, {
+      await fetch(apiUrl(`/clientes/${id}`), {
         method: "DELETE",
       });
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import TaskCard from "../components/TaskCard";
+import { apiUrl } from "../api";
 
 function Tasks() {
   const [tareas, setTareas] = useState([]);
@@ -16,13 +17,13 @@ function Tasks() {
 
   const cargarDatos = async () => {
     try {
-      const respuestaTareas = await fetch("http://localhost:3000/tareas");
+      const respuestaTareas = await fetch(apiUrl("/tareas"));
       const datosTareas = await respuestaTareas.json();
 
-      const respuestaClientes = await fetch("http://localhost:3000/clientes");
+      const respuestaClientes = await fetch(apiUrl("/clientes"));
       const datosClientes = await respuestaClientes.json();
 
-      const respuestaProyectos = await fetch("http://localhost:3000/proyectos");
+      const respuestaProyectos = await fetch(apiUrl("/proyectos"));
       const datosProyectos = await respuestaProyectos.json();
       setProyectos(datosProyectos);
 
@@ -40,7 +41,7 @@ function Tasks() {
       if (editandoId) {
         const tareaOriginal = tareas.find((tarea) => tarea.id === editandoId);
 
-        await fetch(`http://localhost:3000/tareas/${editandoId}`, {
+        await fetch(apiUrl(`/tareas/${editandoId}`), {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -56,7 +57,7 @@ function Tasks() {
         await cargarDatos();
         setEditandoId(null);
       } else {
-        const respuesta = await fetch("http://localhost:3000/tareas", {
+        const respuesta = await fetch(apiUrl("/tareas"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -82,7 +83,7 @@ function Tasks() {
 
   const eliminarTarea = async (id) => {
     try {
-      await fetch(`http://localhost:3000/tareas/${id}`, {
+      await fetch(apiUrl(`/tareas/${id}`), {
         method: "DELETE",
       });
 
@@ -97,7 +98,7 @@ function Tasks() {
     const nuevoEstado = !tarea.completada;
 
     try {
-      await fetch(`http://localhost:3000/tareas/${id}`, {
+      await fetch(apiUrl(`/tareas/${id}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
