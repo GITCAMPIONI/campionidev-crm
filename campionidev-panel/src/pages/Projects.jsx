@@ -16,6 +16,7 @@ function Projects() {
         cargarDatos();
     }, []);
 
+    // Carga proyectos y clientes para poder mostrar el nombre del cliente asociado.
     const cargarDatos = async () => {
         try {
             const resProyectos = await fetch(apiUrl("/proyectos"));
@@ -79,6 +80,7 @@ function Projects() {
         }
     };
 
+    // Convierte clienteId en nombre legible para las tarjetas de proyecto.
     const obtenerNombreCliente = (clienteId) => {
         const cliente = clientes.find(
             (cliente) => cliente.id === clienteId

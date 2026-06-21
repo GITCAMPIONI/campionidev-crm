@@ -8,8 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Persistencia simple para demo: cada recurso se guarda en un archivo JSON local.
 const tareasPath = path.join(__dirname, "tareas.json");
 
+// Lee tareas desde disco y crea el archivo si todavia no existe.
 function leerTareas() {
   if (!fs.existsSync(tareasPath)) {
     fs.writeFileSync(tareasPath, "[]");
@@ -19,10 +21,12 @@ function leerTareas() {
   return JSON.parse(data);
 }
 
+// Sobrescribe el JSON completo; suficiente para demo, no ideal para concurrencia real.
 function guardarTareas(tareas) {
   fs.writeFileSync(tareasPath, JSON.stringify(tareas, null, 2));
 }
 
+// Clientes, proyectos y tareas comparten el mismo patron de lectura/escritura.
 const clientesPath = path.join(__dirname, "clientes.json");
 
 function leerClientes() {
@@ -53,6 +57,7 @@ function guardarProyectos(proyectos) {
   fs.writeFileSync(proyectosPath, JSON.stringify(proyectos, null, 2));
 }
 
+// Tareas: se relacionan con clienteId y proyectoId para conectar el trabajo con su contexto.
 app.get("/tareas", (req, res) => {
   const tareas = leerTareas();
   res.json(tareas);
@@ -114,6 +119,7 @@ app.put("/tareas/:id", (req, res) => {
   res.json(tareasActualizadas.find((tarea) => tarea.id === id));
 });
 
+// Clientes: recurso principal del CRM.
 app.get("/clientes", (req, res) => {
   const clientes = leerClientes();
   res.json(clientes);
@@ -175,6 +181,7 @@ app.put("/clientes/:id", (req, res) => {
   res.json({ mensaje: "Cliente actualizado" });
 });
 
+// Proyectos: cada proyecto queda asociado a un cliente mediante clienteId.
 app.get("/proyectos", (req, res) => {
   const proyectos = leerProyectos();
   res.json(proyectos);

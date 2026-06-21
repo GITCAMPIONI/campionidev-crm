@@ -15,6 +15,7 @@ function Tasks() {
     cargarDatos();
   }, []);
 
+  // Carga tareas, clientes y proyectos para mostrar nombres junto a cada tarea.
   const cargarDatos = async () => {
     try {
       const respuestaTareas = await fetch(apiUrl("/tareas"));
@@ -34,6 +35,7 @@ function Tasks() {
     }
   };
 
+  // Crea o actualiza una tarea manteniendo sus relaciones con cliente y proyecto.
   const agregarTarea = async () => {
     if (nuevaTarea.trim() === "" || clienteId === "" || proyectoId === "") return;
 
@@ -93,6 +95,7 @@ function Tasks() {
     }
   };
 
+  // Cambia completada/pendiente y persiste el nuevo estado en el backend.
   const cambiarEstado = async (id) => {
     const tarea = tareas.find((tarea) => tarea.id === id);
     const nuevoEstado = !tarea.completada;

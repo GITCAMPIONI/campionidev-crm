@@ -18,6 +18,7 @@ function Clients() {
     cargarClientes();
   }, []);
 
+  // Sincroniza la lista local con el backend despues de crear o editar.
   const cargarClientes = async () => {
     try {
       const respuesta = await fetch(apiUrl("/clientes"));
@@ -35,6 +36,7 @@ function Clients() {
     });
   };
 
+  // El mismo formulario sirve para alta y edicion segun editandoId.
   const agregarCliente = async (e) => {
     e.preventDefault();
 
@@ -105,6 +107,7 @@ function Clients() {
     }
   };
 
+  // Filtro simple en memoria para busqueda rapida por campos principales.
   const clientesFiltrados = clientes.filter(
     (cliente) =>
       cliente.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||

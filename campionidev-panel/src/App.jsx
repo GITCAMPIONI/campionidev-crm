@@ -10,6 +10,7 @@ function App() {
   return (
     <BrowserRouter>
       <Layout>
+        {/* Rutas principales del panel CRM. */}
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/tareas" element={<Tasks />} />

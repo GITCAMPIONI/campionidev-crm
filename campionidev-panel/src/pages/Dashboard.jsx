@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
   FaUsers,
   FaTasks,
@@ -17,6 +17,7 @@ function Dashboard() {
     cargarDatos();
   }, []);
 
+  // Carga los tres recursos para calcular metricas cruzadas del panel.
   const cargarDatos = async () => {
     try {
       const resTareas = await fetch(apiUrl("/tareas"));
@@ -36,6 +37,7 @@ function Dashboard() {
     }
   };
 
+  // Metricas derivadas: no se guardan, se calculan desde el estado actual.
   const totalTareas = tareas.length;
   const tareasCompletadas = tareas.filter((tarea) => tarea.completada).length;
   const tareasPendientes = totalTareas - tareasCompletadas;
@@ -93,7 +95,7 @@ function Dashboard() {
 
       <div className="dashboard-sections">
         <section className="panel-card">
-          <h2>Últimos clientes</h2>
+          <h2>Ultimos clientes</h2>
 
           {ultimosClientes.length === 0 ? (
             <p>No hay clientes registrados.</p>
@@ -112,7 +114,7 @@ function Dashboard() {
         </section>
 
         <section className="panel-card">
-          <h2>Últimas tareas</h2>
+          <h2>Ultimas tareas</h2>
 
           {ultimasTareas.length === 0 ? (
             <p>No hay tareas registradas.</p>
@@ -124,7 +126,7 @@ function Dashboard() {
                   <p>{tarea.completada ? "Completada" : "Pendiente"}</p>
                 </div>
 
-                <span>{tarea.completada ? "✅" : "⏳"}</span>
+                <span>{tarea.completada ? "Completada" : "Pendiente"}</span>
               </div>
             ))
           )}
